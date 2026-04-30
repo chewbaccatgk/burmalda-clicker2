@@ -1,469 +1,168 @@
-<!DOCTYPE html>
+[30.04.2026 15:20] Тимоха: <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Кликер — Нажми на символ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Бурмалда Кликер”</title>
     <style>
-        * {
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
+        /* Тут начинается магия красоты (CSS) */
         body {
-            background: linear-gradient(145deg, #1e2a2a 0%, #0f1a1a 100%);
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a; /* Тёмный фон */
+            color: #f0f0f0; /* Светлый текст */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Segoe UI', 'Fredoka One', 'Poppins', system-ui, -apple-system, 'Roboto', sans-serif;
             margin: 0;
-            padding: 20px;
-            cursor: default;
-        }
-
-        /* Главная карточка игры */
-        .game-container {
-            background: rgba(0, 0, 0, 0.55);
-            backdrop-filter: blur(2px);
-            border-radius: 80px;
-            padding: 25px 20px 40px 20px;
-            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 215, 150, 0.3);
-        }
-
-        .clicker-panel {
-            background: #2c2118;
-            background-image: radial-gradient(circle at 25% 40%, rgba(255, 160, 80, 0.08) 2%, transparent 2.5%);
-            background-size: 28px 28px;
-            border-radius: 70px;
-            padding: 30px 25px 35px 25px;
             text-align: center;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 12px 20px rgba(0,0,0,0.3);
+            user-select: none; /* Чтобы нельзя было выделить текст */
         }
-
-        /* Счёт */
-        .score-area {
-            background: #0c0b0a;
-            display: inline-block;
-            padding: 12px 30px;
-            border-radius: 100px;
-            margin-bottom: 30px;
-            box-shadow: inset 0 1px 3px #5f4a32, 0 8px 12px rgba(0,0,0,0.3);
+        .container {
+            background-color: #2b2b2b;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            max-width: 400px;
         }
-
-        .score-label {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            font-weight: 500;
-            color: #ffcf9a;
-            text-shadow: 0 2px 0 #5a2e0e;
+        h1 {
+            color: #ffaa00; /* Золотой цвет */
+            font-size: 3em;
+            margin: 0 0 10px 0;
+            text-shadow: 3px 3px 0px #cc7700;
         }
-
-        .score-value {
-            font-size: 4.4rem;
-            font-weight: 800;
-            color: #fbe5b9;
-            background: linear-gradient(135deg, #ffdd99, #ffb347);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 2px 5px #00000040;
-            line-height: 1;
-            margin-left: 10px;
-            display: inline-block;
+        .counter-box {
+            background-color: #111;
+            border: 2px solid #ffaa00;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
         }
-
-        /* КЛИКАБЕЛЬНЫЙ ОБЪЕКТ — стилизованный символ */
-        .click-zone {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            margin: 15px 0 20px 0;
-            transition: transform 0.07s ease;
-            filter: drop-shadow(0 12px 18px rgba(0,0,0,0.5));
-        }
-
-        .click-zone:active {
-            transform: scale(0.96);
-        }
-
-        .clickable-object {
-            background: radial-gradient(ellipse at 30% 40%, #ffccaa, #d98a5c);
-            width: 240px;
-            height: 280px;
-            border-radius: 50% 50% 45% 45%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 0 #8b4b2a, inset 0 2px 20px #fff3cf, inset 0 -5px 8px rgba(0,0,0,0.2);
-            transition: all 0.05s linear;
-            border: 2px solid #efb784;
-        }
-
-        /* символические детали, деликатно и в рамках эстетики кликера, без вульгарности */
-        .clickable-object::before {
-            content: "⚡";
-            position: absolute;
-            top: 15%;
-            left: 18%;
-            font-size: 2.2rem;
-            opacity: 0.6;
-            filter: drop-shadow(0 0 3px gold);
-        }
-
-        .clickable-object::after {
-            content: "✦";
-            position: absolute;
-            bottom: 12%;
-            right: 15%;
-            font-size: 2rem;
-            color: #ffd966;
-            text-shadow: 0 0 2px red;
-            opacity: 0.7;
-        }
-
-        .clickable-object span {
-            font-size: 7rem;
+        #score {
+            font-size: 2.5em;
             font-weight: bold;
+            color: #ffcc00;
             display: block;
-            text-align: center;
-            transform: rotate(5deg);
-            color: #f8e0c0;
-            text-shadow: 3px 5px 0 #a0491c;
-            letter-spacing: 6px;
         }
-
-        /* анимация пульсации при клике */
-        .click-animation {
-            animation: rubberPop 0.12s cubic-bezier(0.34, 1.2, 0.64, 1) 2 alternate;
-        }
-
-        @keyframes rubberPop {
-            0% { transform: scale(1); }
-            100% { transform: scale(1.08); text-shadow: 0 0 8px gold; }
-        }
-
-        /* Контейнер для всплывающих +1 */
-        .floating-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 9999;
-            overflow: visible;
-        }
-
-        .float-plus {
-            position: absolute;
-            font-size: 2rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #fff4b0, #ffbc3c);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 8px #ffa500, 0 0 1px black;
-            font-family: monospace;
-            white-space: nowrap;
-            pointer-events: none;
-            animation: floatUpFade 0.9s ease-out forwards;
-            z-index: 10000;
-        }
-
-        @keyframes floatUpFade {
-            0% {
-                opacity: 1;
-                transform: translateY(0px) scale(0.8);
-            }
-            30% {
-                opacity: 1;
-                transform: translateY(-25px) scale(1.2);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-85px) scale(1);
-            }
-        }
-
-        /* кнопка сброса */
-        .reset-btn {
-            background: #3d2a1f;
+        .big-btn {
+            background-color: #ff5500;
             border: none;
-            color: #ffddb0;
-            font-size: 1.3rem;
+            color: white;
+            padding: 25px 50px;
+            font-size: 2em;
             font-weight: bold;
-            padding: 8px 26px;
-            border-radius: 40px;
-            margin-top: 30px;
+            border-radius: 100px;
             cursor: pointer;
-            font-family: inherit;
-            transition: all 0.2s;
-            box-shadow: 0 5px 0 #1f140c;
-            backdrop-filter: blur(2px);
+            box-shadow: 0 8px 0px #993300;
+            transition: all 0.1s ease;
+            margin: 20px 0;
+            outline: none;
         }
-
-        .reset-btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #1f140c;
+        .big-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 3px 0px #993300;
         }
-
-        .info {
-            margin-top: 18px;
-            font-size: 0.75rem;
-            color: #e9c891;
-            text-align: center;
-            background: #231d17a0;
-            border-radius: 40px;
-            padding: 6px 12px;
-            display: inline-block;
+        .shop {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
         }
-
-        footer {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-            align-items: center;
+        .shop h3 {
+            margin: 0 0 10px 0;
+            color: #ffaa00;
+        }
+        .upgrade-btn {
+            background-color: #444;
+            border: 1px solid #ffaa00;
+            color: #ffaa00;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        .upgrade-btn:hover {
+            background-color: #555;
         }
     </style>
 </head>
 <body>
 
-<div class="game-container">
-    <div class="clicker-panel">
-        <div class="score-area">
-            <span class="score-label">💪 КЛИКИ 💪</span>
-            <span class="score-value" id="scoreDisplay">0</span>
+    <div class="container">
+        <h1>🍎 Бурмалда 🍎</h1>
+        <p>Жми на Бурмалду, чтобы заработать очки!</p>
+        
+        <div class="counter-box">
+            <span>🍏 Бурбаллы:</span>
+            <span id="score">0</span>
         </div>
 
-        <!-- ОСНОВНАЯ ЗОНА КЛИКА — СИМВОЛИЧЕСКИЙ ОБЪЕКТ -->
-        <div class="click-zone" id="clickZone">
-            <div class="clickable-object" id="clickableThing">
-                <span>🍆</span>
-            </div>
-        </div>
+        <!-- Главная кнопка-кликер -->
+        <button class="big-btn" id="clickBtn">🥊 БУРМАЛДА!</button>
 
-        <footer>
-            <button class="reset-btn" id="resetBtn">⟳ СБРОС</button>
-            <div class="info">👇 Тап по объекту = +1 👆</div>
-        </footer>
+        <p>Сила клика: <span id="clickPower">1</span></p>
+
+        <div class="shop">
+            <h3>🏪 Магазин</h3>
+            <p>Купить "Золотую Бурмалду" (+1 к силе клика)</p>
+            <button class="upgrade-btn" id="upgradeBtn">Купить за <span id="upgradeCost">10</span> бурбаллов</button>
+        </div>
     </div>
-</div>
 
-<!-- контейнер для всплывающих плюсиков -->
-<div id="floatingContainer" class="floating-container"></div>
+    <script>
+        // === Тут начинается МОЗГ игры (JavaScript) ===
 
-<script>
-    (function() {
-        // --- Данные игры ---
-        let clickCount = 0;
-        const scoreElement = document.getElementById('scoreDisplay');
-        const clickZone = document.getElementById('clickZone');
-        const clickableObject = document.getElementById('clickableThing');
-        const resetBtn = document.getElementById('resetBtn');
-        const floatContainer = document.getElementById('floatingContainer');
+        // Наши переменные (как банк и счётчик в кармане)
+        let score = 0;
+        let clickPower = 1;
+        let upgradeCost = 10;
 
-        // --- Вспомогательная функция: анимация нажатия на объект (эффект пульсации) ---
-        function animateClick(targetElement) {
-            if (!targetElement) return;
-            targetElement.classList.add('click-animation');
-            setTimeout(() => {
-                targetElement.classList.remove('click-animation');
-            }, 130);
-        }
+        // Находим наши HTML-элементы, чтобы потом их двигать
+        const scoreSpan = document.getElementById("score");
+        const clickPowerSpan = document.getElementById("clickPower");
+        const clickBtn = document.getElementById("clickBtn");
+        const upgradeBtn = document.getElementById("upgradeBtn");
+        const upgradeCostSpan = document.getElementById("upgradeCost");
+[30.04.2026 15:20] Тимоха: // Функция обновления всего текста на экране
+        function updateUI() {
+            scoreSpan.textContent = score;
+            clickPowerSpan.textContent = clickPower;
+            upgradeCostSpan.textContent = upgradeCost;
 
-        // --- Функция создания парящего +1 в случайном смещении от места клика ---
-        function createFloatingPlus(clientX, clientY) {
-            // Создаём div с текстом "+1"
-            const plusDiv = document.createElement('div');
-            plusDiv.className = 'float-plus';
-            plusDiv.textContent = '+1';
-            
-            // Рандомное отклонение, чтобы цифры летели в разные стороны (эффект радости)
-            const randomOffsetX = (Math.random() - 0.5) * 70;  // от -35px до +35px
-            const randomOffsetY = (Math.random() - 0.8) * 40;  // немного вверх смещение старта
-            // Базовая позиция - координаты клика плюс небольшое смещение
-            const leftPos = clientX + randomOffsetX - 15;   // центрирование примерно
-            const topPos = clientY + randomOffsetY - 20;
-            
-            plusDiv.style.position = 'absolute';
-            plusDiv.style.left = leftPos + 'px';
-            plusDiv.style.top = topPos + 'px';
-            plusDiv.style.fontSize = `${Math.floor(Math.random() * 14 + 22)}px`; // от 22px до 36px
-            // разные оттенки золотистых
-            const hue = Math.random() * 20 + 40;  // от 40 до 60 (золотисто-оранж)
-            plusDiv.style.background = `linear-gradient(135deg, #fff0b5, #ffbc4a)`;
-            plusDiv.style.backgroundClip = 'text';
-            plusDiv.style.webkitBackgroundClip = 'text';
-            plusDiv.style.textShadow = '0 0 5px #ff8800';
-            
-            floatContainer.appendChild(plusDiv);
-            
-            // Автоудаление после завершения анимации
-            plusDiv.addEventListener('animationend', () => {
-                if (plusDiv.parentNode) plusDiv.parentNode.removeChild(plusDiv);
-            });
-            // запасной таймер на случай, если анимация не сработает
-            setTimeout(() => {
-                if (plusDiv.parentNode) plusDiv.parentNode.removeChild(plusDiv);
-            }, 1000);
-        }
-
-        // --- Получение координат клика относительно viewport ---
-        function getClickCoordinates(event) {
-            let clientX, clientY;
-            if (event.touches) {
-                // для мобильных касаний
-                const touch = event.touches[0];
-                clientX = touch.clientX;
-                clientY = touch.clientY;
-            } else if (event.clientX !== undefined) {
-                clientX = event.clientX;
-                clientY = event.clientY;
+            // Если денег не хватает - кнопка тускнеет и не жмется
+            if (score >= upgradeCost) {
+                upgradeBtn.disabled = false;
+                upgradeBtn.style.opacity = "1";
             } else {
-                // fallback - центр кликабельной области
-                const rect = clickZone.getBoundingClientRect();
-                clientX = rect.left + rect.width / 2;
-                clientY = rect.top + rect.height / 2;
+                upgradeBtn.disabled = true;
+                upgradeBtn.style.opacity = "0.5";
             }
-            return { clientX, clientY };
         }
 
-        // --- Основная функция обработки клика (увеличение счёта, анимации, +1) ---
-        function handleClick(event) {
-            // предотвращаем любые стандартные поведения (drag, выделение)
-            event.preventDefault();
-            if (event.stopPropagation) event.stopPropagation();
-            
-            // 1) Увеличиваем счёт
-            clickCount++;
-            updateScoreUI();
-            
-            // 2) Анимация нажатия на кликабельный объект (стили пульсации на самом объекте)
-            animateClick(clickableObject);
-            
-            // 3) Получить координаты для всплывающей цифры
-            let coord = { clientX: 0, clientY: 0 };
-            if (event.touches) {
-                // Мобильное касание
-                if (event.touches.length > 0) {
-                    coord.clientX = event.touches[0].clientX;
-                    coord.clientY = event.touches[0].clientY;
-                } else {
-                    const rect = clickZone.getBoundingClientRect();
-                    coord.clientX = rect.left + rect.width / 2;
-                    coord.clientY = rect.top + rect.height / 2;
-                }
-            } else if (event.clientX !== undefined) {
-                coord.clientX = event.clientX;
-                coord.clientY = event.clientY;
-            } else {
-                const rect = clickZone.getBoundingClientRect();
-                coord.clientX = rect.left + rect.width / 2;
-                coord.clientY = rect.top + rect.height / 2;
-            }
-            
-            // 4) Создаём +1 в случайном, но приятно разлетающемся направлении
-            createFloatingPlus(coord.clientX, coord.clientY);
-            
-            // 5) Дополнительно вибрируем (если браузер поддерживает и это не нарушает UX)
-            if (window.navigator && window.navigator.vibrate) {
-                // короткая вибрация для тактильного отклика, но не навязчиво (10мс)
-                window.navigator.vibrate(12);
-            }
-            
-            // Маленький эффект "масштабирования" всей зоны клика, но без перекрытия, добавляем искру
-            const zoneDiv = document.querySelector('.click-zone');
-            if (zoneDiv) {
-                zoneDiv.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    if (zoneDiv) zoneDiv.style.transform = '';
-                }, 80);
-            }
-        }
-        
-        // Обновление счёта в интерфейсе
-        function updateScoreUI() {
-            scoreElement.innerText = clickCount;
-            // небольшой эффект для счётчика
-            scoreElement.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                if (scoreElement) scoreElement.style.transform = '';
-            }, 120);
-        }
-        
-        // Сброс игры
-        function resetGame() {
-            clickCount = 0;
-            updateScoreUI();
-            // показываем небольшое уведомление с плавающим "reset"
-            const containerRect = clickZone.getBoundingClientRect();
-            const fakeX = containerRect.left + containerRect.width / 2;
-            const fakeY = containerRect.top + containerRect.height / 2;
-            const resetMsg = document.createElement('div');
-            resetMsg.className = 'float-plus';
-            resetMsg.textContent = '↻ 0';
-            resetMsg.style.fontSize = '28px';
-            resetMsg.style.background = 'linear-gradient(145deg, #ffb347, #ffdd99)';
-            resetMsg.style.backgroundClip = 'text';
-            resetMsg.style.webkitBackgroundClip = 'text';
-            resetMsg.style.left = (fakeX - 30) + 'px';
-            resetMsg.style.top = (fakeY - 15) + 'px';
-            resetMsg.style.animation = 'floatUpFade 0.7s ease-out forwards';
-            floatContainer.appendChild(resetMsg);
-            setTimeout(() => {
-                if(resetMsg.parentNode) resetMsg.parentNode.removeChild(resetMsg);
-            }, 800);
-        }
-        
-        // --- Добавление обработчиков событий для мыши и касания ---
-        function bindEvents() {
-            // мышиные события
-            clickZone.addEventListener('click', (e) => {
-                e.preventDefault();
-                handleClick(e);
-            });
-            
-            // Поддержка touch-событий для мобильных (без 300ms задержки)
-            clickZone.addEventListener('touchstart', (e) => {
-                e.preventDefault();   // предотвращаем скролл и зум
-                // чтобы обработать как клик
-                handleClick(e);
-            }, { passive: false });
-            
-            // также для touchmove можно ничего не делать, но чтобы избежать случайного выхода, не блокируем
-            // добавим защиту от контекстного меню на объекте
-            clickZone.addEventListener('contextmenu', (e) => {
-                e.preventDefault();
-                return false;
-            });
-        }
-        
-        // Дополнительно кнопка сброса
-        resetBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            resetGame();
+        // 1. Событие: КЛИК ПО ГЛАВНОЙ КНОПКЕ
+        clickBtn.addEventListener('click', function() {
+            score = score + clickPower;
+            updateUI();
         });
-        
-        // Запускаем биндинги
-        bindEvents();
-        
-        // Изящный эффект старта: приветственный "+1" вишенка
-        setTimeout(() => {
-            const startRect = clickZone.getBoundingClientRect();
-            if (startRect) {
-                createFloatingPlus(startRect.left + startRect.width/2, startRect.top + startRect.height/2 - 20);
+
+        // 2. Событие: ПОКУПКА АПГРЕЙДА
+        upgradeBtn.addEventListener('click', function() {
+            // Проверяем, можем ли купить
+            if (score >= upgradeCost) {
+                score = score - upgradeCost; // Тратим бурбаллы
+                clickPower = clickPower + 1;  // Увеличиваем силу клика
+                // Делаем новую цену дороже (типа инфляция)
+                upgradeCost = Math.floor(upgradeCost * 1.5);
+                updateUI();
             }
-        }, 300);
-        
-        // предупреждение о клавиатурной навигации (не нужно, но оставим доступность)
-        clickZone.setAttribute('aria-label', 'Кликер: нажми на изображение чтобы увеличить счет');
-        clickableObject.setAttribute('role', 'button');
-    })();
-</script>
+        });
+
+        // Старт игры
+        updateUI();
+
+    </script>
 </body>
 </html>
